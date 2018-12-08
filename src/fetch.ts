@@ -15,7 +15,7 @@ const formatQuery = (query: IQuery) => {
 
   // Make sure the groq query doesn't have whitespace
   // and finishes without a comma in the end
-  const groq = query.groq.replace(/\s/g, "");
+  const groq = query.groq.replace(/\s/g, "").replace(/_createdAt/g, '_createdAt ');
   return `"${query.name}": ${
     groq.substr(groq.length - 1, 1) === ","
       ? groq.slice(0, groq.length - 1)
@@ -29,7 +29,7 @@ const fetchData = async (queries: IQuery[], client: any) => {
   // an object with keys equivalent to the queries' names
   const finalQuery = `{
     ${queries.map(formatQuery).join(",")}
-  }`.replace(/\s/g, "");
+  }`.replace(/\s/g, "").replace(/_createdAt/g, '_createdAt ');
 
   console.time(colorizeLog("\nSanity's data fetched in"));
   const data = await client.fetch(finalQuery);
